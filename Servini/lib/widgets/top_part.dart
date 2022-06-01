@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:servini_app/modals/recommendation.dart';
 import 'package:servini_app/screens/search_page.dart';
 import 'package:servini_app/constants/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:flutter/services.dart';
+import '../handlers/recommendation_backend.dart';
 import '../handlers/user_backend.dart';
 import '../modals/user.dart';
-
-Widget topPart(BuildContext context, double numberStars,String username) {
-
+import 'dart:math' as math;
+Widget topPart(BuildContext context,String username) {
+  double numberStars;
   final size = MediaQuery.of(context).size;
   final stars = <Widget>[];
-  for (var i = 0; i < 5; i++) {
-    if (numberStars >= 1) {
-      stars.add(Image.asset("assets/full_star.png", height: 22));
-      numberStars--;
-    } else if (numberStars > 0) {
-      stars.add(Image.asset("assets/half_star.png", height: 22));
-      numberStars--;
-    } else {
-      stars.add(Image.asset("assets/empty_star.png", height: 22));
-    }
-  }
-
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController ratingController = TextEditingController();
   return Container(
     //height: size.height * 0.5,
     decoration: BoxDecoration(
@@ -177,7 +169,65 @@ Widget topPart(BuildContext context, double numberStars,String username) {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(child: Image.asset("assets/recommend.png"),onTap: ()=>{},),
+            GestureDetector(child: Image.asset("assets/recommend.png"),onTap: ()=>{
+            showDialog(context: context, builder: (BuildContext context) {
+            return AlertDialog(
+            title: const Text('Recommendation'),
+            content: SingleChildScrollView(
+            child: ListBody(
+            children:  <Widget>[
+            Center(
+              child: SizedBox(
+                // height: size.height * 0.07,
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: TextField(
+                  controller: descriptionController,
+                  style: const TextStyle(
+                    color: writingBlue,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "Description",
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(width: 0, color: Colors.white),
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                ),
+
+              ),
+            ),
+              Center(
+                child: TextFormField(
+                  controller: ratingController,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),],
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                ),
+              )
+            ],
+            ),
+            ),
+            actions: <Widget>[
+            TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+            Navigator.of(context).pop();
+            },
+            ),
+            TextButton(
+            child: const Text('Approve'),
+            onPressed: () {
+              addRecommendation(new Recommendation(giver: "fatma laribi", receiver: username, rating: double.parse(ratingController.text), description: descriptionController.text));
+            Navigator.of(context).pop();
+            },
+            ),
+            ],
+            );
+            }
+            )}
+            ),
+
             SizedBox(width: size.width * 0.09),
             Image.asset("assets/message.png"),
           ],

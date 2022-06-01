@@ -21,7 +21,7 @@ class _MyProfilePage extends State<ProfilePage> {
       child: Scaffold(
           backgroundColor: coldBackground,
           body: ListView(children: [
-            topPart(context, 3.5,widget.username),
+            topPart(context, widget.username),
             ProfileBody( username: widget.username)
           ])),
     );

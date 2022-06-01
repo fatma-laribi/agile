@@ -26,3 +26,23 @@ Future<Recommendation> addRecommendation(Recommendation recommendation) async{
   }
 
 }
+
+Future<List> getRecommendationsByUser(String user) async{
+  final response =
+  await http.get(Uri.parse('http://10.0.2.2:3000/recommendation/user/'+user));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    List<dynamic> values=<dynamic>[];
+    values = json.decode(response.body);
+
+    print(values);
+    return values;
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load recommendations');
+  }
+
+}
