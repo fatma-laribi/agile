@@ -60,51 +60,56 @@ class ProfileBody extends StatelessWidget {
           SizedBox(height: size.height * 0.03),
           titleRow("Offers",OffersPage(username: username),context),
           FutureBuilder(
-              future: getOffersByUsername(username),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.connectionState==ConnectionState.done){
-                  if (snapshot.data == null) {
-                    return Center(
-                      child: Text('no data',style:TextStyle(fontSize: 20)),
-                    );
-                  }
-                  else {
-
-                    return OfferRequestWidget(disponibility: snapshot.data[0]["disponibility"].toString(), description: snapshot.data[0]["description"].toString(), price: snapshot.data[0]["price"].toString(), title: snapshot.data[0]["title"].toString(), category: snapshot.data[0]["category"].toString(),
-
-                    );
-
-                  }
-
+            future: getOffersByUsername(username),
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+              print(snapshot.hasData);
+              if(snapshot.hasData){
+                if(snapshot.data.length==0){
+                  return Center(
+                    child: Text('no data',style:TextStyle(fontSize: 20)),
+                  );
                 }
-                else {return CircularProgressIndicator();}
+                else{
+                  print(snapshot.data);
+                  return OfferRequestWidget(disponibility: snapshot.data[0]["disponibility"].toString(), description: snapshot.data[0]["description"].toString(), price: snapshot.data[0]["price"].toString(), title: snapshot.data[0]["title"].toString(), category: snapshot.data[0]["category"].toString(),
+
+                  );
+                }
+
               }
+              else{
+                return Center(child: CircularProgressIndicator());
+              }
+            },
           ),
 
 
           SizedBox(height: size.height * 0.03),
           titleRow("Requests",RequestsPage(username: username),context),
           FutureBuilder(
-              future: getRequestsByUsername(username),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.connectionState==ConnectionState.done){
-                  if (snapshot.data.length==0) {
-                    return Center(
-                      child: Text('no data',style:TextStyle(fontSize: 20)),
-                    );
-                  }
-                  else {
-                    print(snapshot.data);
-                    return OfferRequestWidget(disponibility: snapshot.data[0]["disponibility"].toString(), description: snapshot.data[0]["description"].toString(), price: snapshot.data[0]["price"].toString(), title: snapshot.data[0]["title"].toString(), category: snapshot.data[0]["category"].toString(),
-
-                    );
-
-                  }
-
+            future: getRequestsByUsername(username),
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+              print(snapshot.hasData);
+              if(snapshot.hasData){
+                if(snapshot.data.length==0){
+                  return Center(
+                    child: Text('no data',style:TextStyle(fontSize: 20)),
+                  );
                 }
-                else {return CircularProgressIndicator();}
+                else{
+                  print(snapshot.data);
+                  return OfferRequestWidget(disponibility: snapshot.data[0]["disponibility"].toString(), description: snapshot.data[0]["description"].toString(), price: snapshot.data[0]["price"].toString(), title: snapshot.data[0]["title"].toString(), category: snapshot.data[0]["category"].toString(),
+
+                  );
+                }
+
               }
+              else{
+                return Center(child: CircularProgressIndicator());
+              }
+            },
           ),
+
           SizedBox(height: size.height * 0.03),
        // titleRow("Recommendations",RecommendationsPage(username:username),context),
           SizedBox(height: size.height * 0.025),
