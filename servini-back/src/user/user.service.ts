@@ -27,6 +27,14 @@ export class UserService {
   findOne(username:string) {
     return this.userRepository.findOne({username:`${username}`});
   }
+  findTop(nb:number){
+    return this.userRepository.find({
+      take: nb,
+      order: {
+          rating: "DESC" 
+      }
+  });
+  }
 
   async update(username: string, updateUserDto: UpdateUserDto) {
     const newUser = await this.userRepository.preload({ username, ...updateUserDto });

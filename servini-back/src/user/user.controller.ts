@@ -25,6 +25,10 @@ export class UserController {
   findOne(@Param('username') username: string) {
     return this.userService.findOne(username);
   }
+  @Get('/top/:nb')
+  findTop(@Param('nb') nb:string) {
+    return this.userService.findTop(+nb);
+  }
 
   @Patch(':username')
   update(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto) {

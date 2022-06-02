@@ -51,6 +51,11 @@ class Categories extends State<CategoryWidget> {
                 if(snapshot.hasData){
         List<Category> categories=snapshot.data;
                   return SearchField<Category>(
+                    onSubmit: (String value)=>{
+
+                    },
+                    maxSuggestionsInViewPort: 6,
+                    hint: 'Search in categories',
                     suggestions: categories
                         .map(
                           (e) => SearchFieldListItem<Category>(
@@ -66,16 +71,6 @@ class Categories extends State<CategoryWidget> {
               },
             ),
 
-            SearchField<String>(
-              suggestions: test
-                  .map(
-                    (e) => SearchFieldListItem<String>(
-                  e,//e.name
-                  item: e,
-                ),
-              )
-                  .toList(),
-            ),
         FutureBuilder(
             future: networkHelper.fetchCategory(),
             builder: (BuildContext context, AsyncSnapshot snapshot){

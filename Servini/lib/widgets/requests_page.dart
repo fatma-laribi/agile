@@ -45,6 +45,7 @@ class _MyRequestsPage extends State<RequestsPage> {
               }
               else {
                 return ListView.builder(
+                  shrinkWrap: true,
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return OfferRequestWidget(disponibility: snapshot.data[index]["disponibility"].toString(),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:servini_app/handlers/recommendation_backend.dart';
 import 'package:servini_app/screens/categories_page.dart';
 
 import 'package:servini_app/widgets/user_container.dart';
@@ -8,6 +9,7 @@ import 'package:servini_app/screens/profile_page.dart';
 import 'package:servini_app/widgets/home_bar.dart';
 import 'package:servini_app/constants/colors.dart';
 import '../handlers/category_backend.dart';
+import '../handlers/user_backend.dart';
 import '../modals/category.dart';
 import '../widgets/category.dart';
 import '../widgets/search_bar.dart';
@@ -16,7 +18,7 @@ import 'package:servini_app/widgets/small_category.dart';
 import '../widgets/title_row.dart';
 import '../widgets/see_more.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:convert';
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
   @override
@@ -69,10 +71,10 @@ class _MySearchPage extends State<SearchPage> {
                                 ],
                               ),
                               Row(
-                                children: [
+                                children: const [
                                   Text(
                                     "test" + ' ' + "test",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: writingBlue,
                                       fontFamily: 'Gilroy',
                                       fontWeight: FontWeight.w800,
@@ -128,13 +130,13 @@ class _MySearchPage extends State<SearchPage> {
                                   child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         shrinkWrap: true,
-                                        itemCount:  2,//snapshot.data.length>=2?3:snapshot.data.length+1
+                                        itemCount:  3,//snapshot.data.length>=2?3:snapshot.data.length+1
                                         itemBuilder: (context, index) {
                                           //
-                                          Category category = snapshot.data[index];
-                                          List colors=[[darkYellow, lightYellow],[darkBlue, lightBlue]];
-                                         if(index<1){
 
+                                         if(index<2){
+                                           Category category = snapshot.data[index];
+                                           List colors=[[darkYellow, lightYellow],[darkBlue, lightBlue]];
                                             return Column(
                                               children: <Widget>[
                                                 smallCategory(context,
@@ -171,19 +173,39 @@ class _MySearchPage extends State<SearchPage> {
                     ),
                     SizedBox(height: size.height * 0.03),
                    // titleRow("Top Rated",TopRatedPage(),context),
-                    SizedBox(height: size.height * 0.01),
-                    userContainer(context),
-                    SizedBox(height: size.height * 0.01),
-                    userContainer(context),
-                    SizedBox(height: size.height * 0.01),
-                    userContainer(context),
-                    SizedBox(height: size.height * 0.01),
-                    userContainer(context),
-                    SizedBox(height: size.height * 0.01),
-                    userContainer(context),
-                    SizedBox(height: size.height * 0.01),
-                    userContainer(context),
-                    SizedBox(height: size.height * 0.01),
+                    const Text(
+                      "Top Rated",
+                      style: TextStyle(
+                        color: writingBlue,
+                        fontFamily: "Gilroy",
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      ),
+                    ),
+                    FutureBuilder(
+                        future: getUsersByNb(3),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          if(snapshot.hasData){
+                            if(snapshot.data.length==0){
+                              return Text('no data',style:TextStyle(fontSize: 20));
+                            }
+                            else {
+                              return Container(
+                                height:300,
+                                child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    return userContainer(context,snapshot.data[index]["username"],snapshot.data[index]["bio"],snapshot.data[index]["rating"]);
+
+                                  },
+
+                                ),
+                              );
+                            }}
+                          else {return CircularProgressIndicator();}
+                        }
+                    ),
+
                   ],
                 ),
                 Positioned(
